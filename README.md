@@ -34,7 +34,7 @@ The script has several parameters that you can customize:
 | `-RunLevel` |	(optional) The run level of the task. Possible values: `"Highest"` (default), `"Limited"`.	|`"Highest"` |
 | `-TaskName` |	(optional) The name of the task. |	`"$VMName as a service"` |
 | `-TaskDescription` |	(optional) The description of the task. |	`"Vbox VM $VMName as a service at startup"` |
-| `TaskPath` |	(optional) The path to the task. |	`"My Custom tasks"` |
+| `TaskPath` |	(optional) The path to the task. |	`"My Custom Tasks"` |
 
 
 
