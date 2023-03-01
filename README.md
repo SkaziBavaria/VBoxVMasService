@@ -16,7 +16,7 @@ This PowerShell script creates a Windows Scheduled Task that runs a VirtualBox v
 3. Navigate to the directory where the script is saved.
 4. Run the script with the required `-VMName` parameter, and any optional parameters you want to use:
 ```powershell
-// Replace "MyVM" with the name of the virtual machine that you want to run as a service.
+# Replace "MyVM" with the name of the virtual machine that you want to run as a service.
 .\VBoxServiceTask.ps1 -VMName "MyVM"
 ```
 5. The script will create a Windows Scheduled Task that runs the virtual machine as a service at system startup.
