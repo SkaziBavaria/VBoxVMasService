@@ -1,4 +1,4 @@
-## PowerShell Script: Run VirtualBox VM as a Service at Startup
+## [Work in Progress] PowerShell Script: Run VirtualBox VM as a Service at Startup
 
 This PowerShell script creates a Windows Scheduled Task that runs a VirtualBox virtual machine as a service at system startup. The virtual machine will run in headless mode, meaning there is no GUI displayed on the host machine.
 
