@@ -39,8 +39,7 @@ The script has several parameters that you can customize:
 |`DaysInterval`| (optional) Interval in days for the daily trigger.|`1`| Any positive integer |
 | `-DaysOfWeek` | (optional) The days of the week to run the scheduled task (for the Weekly trigger). | N/A|`"Sunday"`, `"Monday"`, `"Tuesday"`, `"Wednesday"`, `"Thursday"`, `"Friday"`, `"Saturday"`
 | `-WeeksInterval`| (optional) The number of weeks between runs (for the Weekly trigger).|`1`|Any positive integer|
-| `-DaysOfMonth`| (optional) The days of the month to run the scheduled task (for the Monthly frequency). | N/A|	Any valid day of the month (1-31)|
-|`-MonthsOfYear`| (optional) The months of the year for the Monthly frequency (1-12).| N/A|Any valid month number (1-12)|
+
 
 ### Examples:
 1. Start the task at startup:
