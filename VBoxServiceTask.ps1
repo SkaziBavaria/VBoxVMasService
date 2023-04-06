@@ -7,12 +7,12 @@ param (
 
     # Frequency frequency for the scheduled task.
     # Possible values: Once, Daily, Weekly, Monthly, AtLogOn, AtStartup
-    [Parameter(Mandatory=$true)]
+    [Parameter()]
     [ValidateSet("Once", "Daily", "Weekly", "Monthly", "AtLogOn", "AtStartup")]
     [string]$Frequency = "AtStartup",
 
     # Name of the scheduled task.
-    [Parameter(Mandatory=$true)]
+    [Parameter()]
     [string]$TaskName = "Start-VM-$VMName",
 
     # Run level for the scheduled task.
@@ -30,30 +30,34 @@ param (
     [string]$VBoxManagePath = "C:\PROGRA~1\Oracle\VirtualBox\VBoxManage.exe",
 
     # Start date for the scheduled task (format: yyyy-MM-dd).
-    [string]$StartDate,
+    [string]$StartDate = (Get-Date).ToString("yyyy-MM-dd"),
 
     # Start time for the scheduled task (format: HH:mm).
-    [string]$StartTime,
+    [string]$StartTime = (Get-Date).ToString("HH:mm"),
 
     # Interval in days for the daily Frequency.
-    [UInt32]$DaysInterval,
+    [UInt32]$DaysInterval = 1,
 
     # Days of the week for the weekly Frequency.
     # Possible values: Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
-    [DayOfWeek[]]$DaysOfWeek,
+    [string]$DaysOfWeek,
 
     # Interval in weeks for the weekly Frequency.
-    [UInt32]$WeeksInterval,
+    [UInt32]$WeeksInterval = 1,
 
     # Days of the month for the monthly Frequency (1-31).
-    [UInt32[]]$DaysOfMonth,
+    [string]$DaysOfMonth,
 
     # Months of the year for the monthly Frequency (1-12).
-    [UInt32[]]$MonthsOfYear,
+    [string]$MonthsOfYear,
 
     # User account to run the scheduled task.
     [string]$User = "NT AUTHORITY\SYSTEM"
 )
+
+
+$DaysOfMonthArray = $DaysOfMonth -split ',' | ForEach-Object { [int]$_ }
+$MonthsOfYearArray = $MonthsOfYear -split ',' | ForEach-Object { [int]$_ }
 
 # Combine the start date and time into a single DateTime object.
 $combinedDateTime = [DateTime]::ParseExact("$StartDate $StartTime", "yyyy-MM-dd HH:mm", $null)
@@ -64,28 +68,28 @@ $action = New-ScheduledTaskAction -Execute $VBoxManagePath -Argument "startvm $V
 # Set the Frequency based on the specified frequency.
 switch ($Frequency) {
     "Once" {
-        $Frequency = New-ScheduledTaskFrequency -Once -At $combinedDateTime
+        $Trigger = New-ScheduledTaskTrigger -Once -At $combinedDateTime
     }
     "Daily" {
-        if ($DaysInterval -gt 0) {
-            $Frequency = New-ScheduledTaskFrequency -Daily -At $combinedDateTime -DaysInterval $DaysInterval
-        } else {
-            $Frequency = New-ScheduledTaskFrequency -Daily -At $combinedDateTime
-        }
+        $Trigger = New-ScheduledTaskTrigger -Daily -At $combinedDateTime -DaysInterval $DaysInterval
     }
     "Weekly" {
-        $Frequency = New-ScheduledTaskFrequency -Weekly -At $combinedDateTime -DaysOfWeek $DaysOfWeek -WeeksInterval $WeeksInterval
+        $DaysOfWeekArray = $DaysOfWeek -split ',' | ForEach-Object { [System.DayOfWeek]$_ }
+        $Trigger = New-ScheduledTaskTrigger -Weekly -At ($StartDate + "T" + $StartTime) -DaysOfWeek $DaysOfWeekArray -WeeksInterval $WeeksInterval
     }
+
     "Monthly" {
-        $Frequency = New-ScheduledTaskFrequency -Once -At $combinedDateTime
-        $Frequency.DaysOfMonth = $DaysOfMonth
-        $Frequency.MonthsOfYear = $MonthsOfYear
+        $Trigger = New-ScheduledTaskTrigger -Once -At ($StartDate + "T" + $StartTime)
+        $Trigger.DaysOfMonth = $DaysOfMonthArray
+        $Trigger.MonthsOfYear = $MonthsOfYearArray
     }
+
+
     "AtLogOn" {
-        $Frequency = New-ScheduledTaskFrequency -AtLogOn -User $User
+        $Trigger = New-ScheduledTaskTrigger -AtLogOn -User $User
     }
     "AtStartup" {
-        $Frequency = New-ScheduledTaskFrequency -AtStartup
+        $Trigger = New-ScheduledTaskTrigger -AtStartup
     }
     default {
         Write-Host "Invalid frequency specified. Exiting script."
@@ -100,4 +104,4 @@ $settings = New-ScheduledTaskSettingsSet -RestartInterval (New-TimeSpan -Minutes
 $principal = New-ScheduledTaskPrincipal -UserId $User -LogonType ServiceAccount -RunLevel $RunLevel
 
 # Register (create) the scheduled task with the provided parameters.
-Register-ScheduledTask -Action $action -Trigger $Frequency -Principal $principal -Settings $settings -TaskPath $TaskPath -TaskName $TaskName -Description $TaskDescription
+Register-ScheduledTask -Action $action -Trigger $Trigger -Principal $principal -Settings $settings -TaskPath $TaskPath -TaskName $TaskName -Description $TaskDescription
