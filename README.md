@@ -45,7 +45,7 @@ The script includes a few additional settings to control the task's behavior in 
 
 - `RestartInterval`: The time interval to wait before restarting a failed task. Default is 5 minutes.
 - `RestartCount`: The number of times to attempt to restart the task if it fails. Default is 3.
-- `ExecutionTimeLimit`: The maximum time allowed for the task to run. Default is 365 days.
+- `ExecutionTimeLimit`: The maximum time allowed for the task to run. Default is 365 days/Off.
 - `AllowStartIfOnBatteries`: If set, the task can start even if the system is on battery power.
 
 These settings are currently hardcoded in the script, but you can modify them directly in the script if you need different values.
