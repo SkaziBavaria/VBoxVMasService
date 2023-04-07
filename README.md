@@ -28,7 +28,7 @@ The script has several parameters that you can customize:
 | ---------         | -----------           | ------        | ------------ |
 |`-VMName`          |	(required) The name of the VirtualBox VM to run as a service.	| N/A | Any valid VM name|
 | `-VBoxManagePath` |	(optional) The path to the VBoxManage.exe executable. If your installation path is not default, modify this parameter accordingly. |`"C:\PROGRA~1\Oracle\VirtualBox\VBoxManage.exe"` |Any valid file path|
-| `-Frequency`        |	(optional) The frequency for the scheduled task.|`"AtStartup"`|`"AtStartup"`, `"Once"`, `"Daily"`, `"Weekly"`, `"Monthly"`, `"AtLogOn"`. |
+| `-Frequency`        |	(optional) The frequency for the scheduled task.|`"AtStartup"`|`"AtStartup"`, `"Once"`, `"Daily"`, `"Weekly"`, `"AtLogOn"`. |
 | `-User`           |	(optional) The user account to run the task as. |	`"NT AUTHORITY\SYSTEM"` |Any valid user account|
 | `-RunLevel`       |	(optional) The run level of the task. | `"Highest"`| `"Limited"`,`"Highest"` |
 | `-TaskName`       | (optional) The name of the task. |  `"Start-VM-$VMName"` |Any valid task name|
@@ -40,6 +40,15 @@ The script has several parameters that you can customize:
 | `-DaysOfWeek` | (optional) The days of the week to run the scheduled task (for the Weekly trigger). | N/A|`"Sunday"`, `"Monday"`, `"Tuesday"`, `"Wednesday"`, `"Thursday"`, `"Friday"`, `"Saturday"`
 | `-WeeksInterval`| (optional) The number of weeks between runs (for the Weekly trigger).|`1`|Any positive integer|
 
+### Additional Settings
+The script includes a few additional settings to control the task's behavior in case of failure, execution time limit, and battery power:
+
+- `RestartInterval`: The time interval to wait before restarting a failed task. Default is 5 minutes.
+- `RestartCount`: The number of times to attempt to restart the task if it fails. Default is 3.
+- `ExecutionTimeLimit`: The maximum time allowed for the task to run. Default is 365 days.
+- `AllowStartIfOnBatteries`: If set, the task can start even if the system is on battery power.
+
+These settings are currently hardcoded in the script, but you can modify them directly in the script if you need different values.
 
 ### Examples:
 1. Start the task at startup:
@@ -57,17 +66,12 @@ The script has several parameters that you can customize:
 .\VBoxServiceTask.ps1 -VMName "MyVM" -Frequency Weekly -DaysOfWeek Monday,Friday -StartDate "2023-03-01" -StartTime "09:00"
 ```
 
-4. Start the task on the 1st and 15th day of every month at 10:00 AM:
-```powershell
-.\VBoxServiceTask.ps1 -VMName "MyVM" -Frequency Monthly -DaysOfMonth 1,15 -MonthsOfYear 1,2,3,4,5,6,7,8,9,10,11,12 -StartDate "2023-03-01" -StartTime "10:00"
-```
-
-5. Start the task on a specific date and time:
+4. Start the task on a specific date and time:
 ```powershell
 .\VBoxServiceTask.ps1 -VMName "MyVM" -Frequency Once -StartDate "2023-03-01" -StartTime "10:00"
 ```
 
-6. Start the task at user log on:
+5. Start the task at user log on:
 ```powershell
 .\VBoxServiceTask.ps1 -VMName "MyVM" -Frequency AtLogOn -User "NT AUTHORITY\SYSTEM"
 ```
