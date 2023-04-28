@@ -1,46 +1,32 @@
 <#
 .SYNOPSIS
     Registers a scheduled task for starting a VirtualBox VM based on the provided parameters.
-
 .DESCRIPTION
     This script registers a scheduled task for starting a VirtualBox VM based on the provided parameters.
-
 .PARAMETER VMName
     The name of the VirtualBox VM to start.
-
 .PARAMETER VBoxManagePath
     The path to VBoxManage.exe.
-
 .PARAMETER Frequency
     The frequency of the task to start the VM.
-
 .PARAMETER User
     The user account to run the task.
-
 .PARAMETER RunLevel
     The run level of the task.
-
 .PARAMETER TaskName
     The name of the scheduled task.
-
 .PARAMETER TaskDescription
     The description of the scheduled task.
-
 .PARAMETER TaskPath
     The folder path of the scheduled task.
-
 .PARAMETER StartDate
     The start date of the task.
-
 .PARAMETER StartTime
     The start time of the task.
-
 .PARAMETER DaysInterval
     The interval in days for the task to be triggered.
-
 .PARAMETER DaysOfWeek
     The days of the week for the task to be triggered.
-
 .PARAMETER WeeksInterval
     The interval in weeks for the task to be triggered.
 #>
