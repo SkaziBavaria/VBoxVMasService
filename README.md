@@ -48,7 +48,7 @@ The script includes a few additional settings to control the task's behavior in 
 - `ExecutionTimeLimit`: The maximum time allowed for the task to run. Default is 365 days/Off.
 - `AllowStartIfOnBatteries`: If set, the task can start even if the system is on battery power.
 
-These settings are currently hardcoded in the script, but you can modify them directly in the script if you need different values.
+These settings are currently hardcoded in the script, but you can modify them directly in the script if you need different values. Look for the New-ScheduledTaskSettingsSet command in the script to find and adjust these settings."
 
 ### Examples:
 1. Start the task at startup:
