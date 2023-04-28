@@ -47,10 +47,10 @@ param (
 )
 
 # Check if VBoxManage.exe exists at the specified path
-#if (-not (Test-Path $VBoxManagePath)) {
-#    Write-Error "VBoxManage.exe not found at the specified path. Please check the VBoxManagePath parameter."
-#    return
-#}
+if (-not (Test-Path $VBoxManagePath)) {
+    Write-Error "VBoxManage.exe not found at the specified path. Please check the VBoxManagePath parameter."
+    return
+}
 
 $action = New-ScheduledTaskAction -Execute $VBoxManagePath -Argument "startvm `"$VMName`" --type headless"
 
