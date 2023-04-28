@@ -1,5 +1,49 @@
-# This script registers a scheduled task for starting a VirtualBox VM based on the provided parameters.
-# Usage: ./script_name.ps1 -VMName <vm_name> [additional optional parameters]
+<#
+.SYNOPSIS
+    Registers a scheduled task for starting a VirtualBox VM based on the provided parameters.
+
+.DESCRIPTION
+    This script registers a scheduled task for starting a VirtualBox VM based on the provided parameters.
+
+.PARAMETER VMName
+    The name of the VirtualBox VM to start.
+
+.PARAMETER VBoxManagePath
+    The path to VBoxManage.exe.
+
+.PARAMETER Frequency
+    The frequency of the task to start the VM.
+
+.PARAMETER User
+    The user account to run the task.
+
+.PARAMETER RunLevel
+    The run level of the task.
+
+.PARAMETER TaskName
+    The name of the scheduled task.
+
+.PARAMETER TaskDescription
+    The description of the scheduled task.
+
+.PARAMETER TaskPath
+    The folder path of the scheduled task.
+
+.PARAMETER StartDate
+    The start date of the task.
+
+.PARAMETER StartTime
+    The start time of the task.
+
+.PARAMETER DaysInterval
+    The interval in days for the task to be triggered.
+
+.PARAMETER DaysOfWeek
+    The days of the week for the task to be triggered.
+
+.PARAMETER WeeksInterval
+    The interval in weeks for the task to be triggered.
+#>
 param (
     [Parameter(Mandatory=$true)][string]$VMName,
     [string]$VBoxManagePath = "C:\PROGRA~1\Oracle\VirtualBox\VBoxManage.exe",
@@ -17,10 +61,10 @@ param (
 )
 
 # Check if VBoxManage.exe exists at the specified path
-if (-not (Test-Path $VBoxManagePath)) {
-    Write-Error "VBoxManage.exe not found at the specified path. Please check the VBoxManagePath parameter."
-    return
-}
+#if (-not (Test-Path $VBoxManagePath)) {
+#    Write-Error "VBoxManage.exe not found at the specified path. Please check the VBoxManagePath parameter."
+#    return
+#}
 
 $action = New-ScheduledTaskAction -Execute $VBoxManagePath -Argument "startvm `"$VMName`" --type headless"
 
@@ -37,14 +81,11 @@ switch ($Frequency) {
 }
 
 $principal = New-ScheduledTaskPrincipal -UserID $User -LogonType ServiceAccount -RunLevel $RunLevel
-$settings = New-ScheduledTaskSettingsSet `
-    -RestartInterval (New-TimeSpan -Minutes 5) `
-    -RestartCount 3 `
-    -ExecutionTimeLimit (New-TimeSpan -Days 365) `
-    -AllowStartIfOnBatteries
+$settings = New-ScheduledTaskSettingsSet -RestartInterval (New-TimeSpan -Minutes 5) -RestartCount 3 -ExecutionTimeLimit (New-TimeSpan -Days 365) -AllowStartIfOnBatteries
 
 # Register the scheduled task and handle any errors that may occur
 try {
     Register-ScheduledTask -Action $action -Trigger $Trigger -Principal $principal -Settings $settings -TaskName $TaskName -TaskPath $TaskPath -Description $TaskDescription
 } catch {
-    Write-Error "An error occurred while
+    Write-Error "An error occurred while registering the scheduled task. Error details: $_"
+}
