@@ -78,11 +78,27 @@ These settings are currently hardcoded in the script, but you can modify them di
 
 ### Troubleshooting
 
-- If you receive an error about the script being unsigned, you can change your PowerShell execution policy to RemoteSigned by running the following command as an administrator:
+#### PowerShell Script Unsigned Error
+If you receive an error about the script being unsigned, you might be facing restrictions from the PowerShell execution policy. To address this:
+
+1. Open PowerShell as an administrator.
+2. Change your PowerShell execution policy to RemoteSigned by running the following command:
 `Set-ExecutionPolicy RemoteSigned`
 
-- If you receive an error about the VirtualBox installation directory not being found, you can specify the path to the VBoxManage.exe executable with the -VBoxManagePath parameter.
+#### VirtualBox Installation Directory Not Found
+If you encounter an error about the VirtualBox installation directory not being found, you can specify the path to the VBoxManage.exe executable using the -VBoxManagePath parameter:
 `.\VBoxServiceTask.ps1 -VMName "MyVM" -VBoxManagePath "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe"`
+
+#### VirtualBox VM Doesn't Start on Specified Frequency
+If you attempt to start a VirtualBox VM on a specified frequency (e.g., AtStartup) using a command like:
+
+`.\VBoxServiceTask.ps1 -VMName "MyVM" -Frequency AtStartup`
+...and the VM doesn't start as expected, it could be due to the scheduled task not having access to the user-specific VirtualBox configuration.
+
+To address this, try specifying the user account that has VirtualBox installed using the `-User `parameter:
+
+`.\VBoxServiceTask.ps1 -VMName "MyVM" -Frequency AtStartup -User "YourUsername"`
+Replace "YourUsername" with the name of your user account.
 
 ### License
 This script is released under the [MIT License](./LICENSE)
